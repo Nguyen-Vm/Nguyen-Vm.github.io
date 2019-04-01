@@ -78,6 +78,58 @@
     <div class="outer">
       <section id="main">
   
+    <article id="post-使用HttpURLConnection发送GET，POST请求" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2019/01/03/使用HttpURLConnection发送GET，POST请求/" class="article-date">
+  <time datetime="2019-01-03T06:06:11.000Z" itemprop="datePublished">2019-01-03</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/01/03/使用HttpURLConnection发送GET，POST请求/">使用HttpURLConnection发送GET，POST请求</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <h1 id="使用HttpURLConnection发送GET，POST请求"><a href="#使用HttpURLConnection发送GET，POST请求" class="headerlink" title="使用HttpURLConnection发送GET，POST请求"></a>使用HttpURLConnection发送GET，POST请求</h1><p>接口项目地址：<a href="https://github.com/Nguyen-Vm/s-program" target="_blank" rel="noopener">https://github.com/Nguyen-Vm/s-program</a></p>
+<p>API：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/area&quot;)</span><br><span class="line">public class AreaController &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private AreaService areaService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/list&quot;, method = RequestMethod.GET)</span><br><span class="line">    private Map&lt;String, Object&gt; listArea()&#123;</span><br><span class="line">        Map&lt;String, Object&gt; modelMap = new HashMap&lt;&gt;();</span><br><span class="line">        List&lt;Area&gt; areaList = areaService.getAreaList();</span><br><span class="line">        modelMap.put(&quot;list&quot;, areaList);</span><br><span class="line">        return modelMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/insert&quot;, method = RequestMethod.POST)</span><br><span class="line">    private Map&lt;String, Object&gt; insertArea(@RequestBody Area area)&#123;</span><br><span class="line">        Map&lt;String, Object&gt; modelMap = new HashMap&lt;&gt;();</span><br><span class="line">        boolean result = areaService.addArea(area);</span><br><span class="line">        modelMap.put(&quot;result&quot;, result);</span><br><span class="line">        return modelMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发送GET请求代码示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        InetAddress inetAddress = InetAddress.getLocalHost();</span><br><span class="line">        // 获取本地IP</span><br><span class="line">        String hostName = inetAddress.getHostAddress();</span><br><span class="line"></span><br><span class="line">        String getUrlStr = String.format(&quot;http://%s:%s/s-program/area/list&quot;, hostName, 8080);</span><br><span class="line">        get(getUrlStr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void get(String urlStr) throws IOException &#123;</span><br><span class="line">        URL url = new URL(urlStr);</span><br><span class="line"></span><br><span class="line">        HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line"></span><br><span class="line">        // 返回结果-字节输入流转换成字符输入流，控制台输出字符</span><br><span class="line">        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));</span><br><span class="line">        StringBuilder sb = new StringBuilder();</span><br><span class="line">        String line;</span><br><span class="line">        while ((line = br.readLine()) != null) &#123;</span><br><span class="line">            sb.append(line);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(sb);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发送POST请求代码示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        InetAddress inetAddress = InetAddress.getLocalHost();</span><br><span class="line">        // 获取本地IP</span><br><span class="line">        String hostName = inetAddress.getHostAddress();</span><br><span class="line"></span><br><span class="line">        String postUrlStr = String.format(&quot;http://%s:%s/s-program/area/insert&quot;, hostName, 8080);</span><br><span class="line">        post(postUrlStr, &quot;&#123;\&quot;areaName\&quot;: \&quot;中国上海\&quot;, \&quot;priority\&quot;: 1&#125;&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void post(String urlStr, String body) throws IOException &#123;</span><br><span class="line">        URL url = new URL(urlStr);</span><br><span class="line"></span><br><span class="line">        HttpURLConnection connection = (HttpURLConnection) url.openConnection();</span><br><span class="line">        connection.setRequestMethod(&quot;POST&quot;);</span><br><span class="line">        // 设置Content-Type</span><br><span class="line">        connection.setRequestProperty(&quot;Content-Type&quot;, &quot;application/json&quot;);</span><br><span class="line">        // 设置是否向httpUrlConnection输出，post请求设置为true，默认是false</span><br><span class="line">        connection.setDoOutput(true);</span><br><span class="line"></span><br><span class="line">        // 设置RequestBody</span><br><span class="line">        PrintWriter printWriter = new PrintWriter(connection.getOutputStream());</span><br><span class="line">        printWriter.write(body);</span><br><span class="line">        printWriter.flush();</span><br><span class="line"></span><br><span class="line">        // 返回结果-字节输入流转换成字符输入流，控制台输出字符</span><br><span class="line">        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));</span><br><span class="line">        StringBuilder sb = new StringBuilder();</span><br><span class="line">        String line;</span><br><span class="line">        while ((line = br.readLine()) != null) &#123;</span><br><span class="line">            sb.append(line);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(sb);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+        <a data-url="https://nguyen-vm.github.io/2019/01/03/使用HttpURLConnection发送GET，POST请求/" data-id="cjtxr9xui0000csw6b0tdvngo" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-《高性能MySQL(第3版)》摘要——索引篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <h3 href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/" class="article-date">
@@ -345,6 +397,10 @@
       <ul>
         
           <li>
+            <a href="/2019/01/03/使用HttpURLConnection发送GET，POST请求/">使用HttpURLConnection发送GET，POST请求</a>
+          </li>
+        
+          <li>
             <a href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/">《高性能MySQL(第3版)》摘要——索引篇</a>
           </li>
         
@@ -361,7 +417,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -370,7 +426,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
