@@ -7,19 +7,19 @@
   
   <title>EntityManager常用方法简介 | restfulvim</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="EntityManager常用方法简介首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不">
+  <meta name="description" content="首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；">
 <meta name="keywords" content="EntityManager">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EntityManager常用方法简介">
 <meta property="og:url" content="https://nguyen-vm.github.io/2018/11/29/EntityManager常用方法简介/index.html">
 <meta property="og:site_name" content="restfulvim">
-<meta property="og:description" content="EntityManager常用方法简介首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不">
+<meta property="og:description" content="首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://img2018.cnblogs.com/blog/1537244/201811/1537244-20181129115140272-2002187652.jpg">
-<meta property="og:updated_time" content="2019-04-01T03:09:07.629Z">
+<meta property="og:updated_time" content="2019-04-01T03:19:03.304Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EntityManager常用方法简介">
-<meta name="twitter:description" content="EntityManager常用方法简介首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不">
+<meta name="twitter:description" content="首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；">
 <meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1537244/201811/1537244-20181129115140272-2002187652.jpg">
   
     <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
@@ -108,7 +108,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="EntityManager常用方法简介"><a href="#EntityManager常用方法简介" class="headerlink" title="EntityManager常用方法简介"></a>EntityManager常用方法简介</h1><p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
+        <p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
 <p><img src="https://img2018.cnblogs.com/blog/1537244/201811/1537244-20181129115140272-2002187652.jpg" alt="img"></p>
 <p>1.entityManager.persist(Object entity);　　新增数据；</p>
 <p>如果entity的主键不为空，而数据库没有该主键，会抛出异常；</p>

@@ -7,18 +7,18 @@
   
   <title>微信公众号开发——用户账号体系 | restfulvim</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="微信公众号开发——用户账号体系不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，">
+  <meta name="description" content="不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，并将其保存在COOKIE中；用">
 <meta name="keywords" content="微信公众号">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微信公众号开发——用户账号体系">
 <meta property="og:url" content="https://nguyen-vm.github.io/2018/12/11/微信公众号开发——用户账号体系/index.html">
 <meta property="og:site_name" content="restfulvim">
-<meta property="og:description" content="微信公众号开发——用户账号体系不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，">
+<meta property="og:description" content="不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，并将其保存在COOKIE中；用">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-01T03:08:55.191Z">
+<meta property="og:updated_time" content="2019-04-01T03:20:13.694Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信公众号开发——用户账号体系">
-<meta name="twitter:description" content="微信公众号开发——用户账号体系不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，">
+<meta name="twitter:description" content="不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，并将其保存在COOKIE中；用">
   
     <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
   
@@ -106,7 +106,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="微信公众号开发——用户账号体系"><a href="#微信公众号开发——用户账号体系" class="headerlink" title="微信公众号开发——用户账号体系"></a>微信公众号开发——用户账号体系</h1><p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
+        <p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
 <p>用户表有OPEN_ID字段，真实信息表有手机号字段。</p>
 <p>用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据；</p>
 <p>没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。</p>

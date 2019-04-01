@@ -103,7 +103,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="使用HttpURLConnection发送GET，POST请求"><a href="#使用HttpURLConnection发送GET，POST请求" class="headerlink" title="使用HttpURLConnection发送GET，POST请求"></a>使用HttpURLConnection发送GET，POST请求</h1><p>接口项目地址：<a href="https://github.com/Nguyen-Vm/s-program" target="_blank" rel="noopener">https://github.com/Nguyen-Vm/s-program</a></p>
+        <p>接口项目地址：<a href="https://github.com/Nguyen-Vm/s-program" target="_blank" rel="noopener">https://github.com/Nguyen-Vm/s-program</a></p>
 <p>API：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/area&quot;)</span><br><span class="line">public class AreaController &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private AreaService areaService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/list&quot;, method = RequestMethod.GET)</span><br><span class="line">    private Map&lt;String, Object&gt; listArea()&#123;</span><br><span class="line">        Map&lt;String, Object&gt; modelMap = new HashMap&lt;&gt;();</span><br><span class="line">        List&lt;Area&gt; areaList = areaService.getAreaList();</span><br><span class="line">        modelMap.put(&quot;list&quot;, areaList);</span><br><span class="line">        return modelMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/insert&quot;, method = RequestMethod.POST)</span><br><span class="line">    private Map&lt;String, Object&gt; insertArea(@RequestBody Area area)&#123;</span><br><span class="line">        Map&lt;String, Object&gt; modelMap = new HashMap&lt;&gt;();</span><br><span class="line">        boolean result = areaService.addArea(area);</span><br><span class="line">        modelMap.put(&quot;result&quot;, result);</span><br><span class="line">        return modelMap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>发送GET请求代码示例：</p>
@@ -155,7 +155,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="MySQL-数据合并"><a href="#MySQL-数据合并" class="headerlink" title="MySQL-数据合并"></a>MySQL-数据合并</h1><p>原数据：</p>
+        <p>原数据：</p>
 <table>
 <thead>
 <tr>
@@ -261,7 +261,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="微信公众号开发——用户账号体系"><a href="#微信公众号开发——用户账号体系" class="headerlink" title="微信公众号开发——用户账号体系"></a>微信公众号开发——用户账号体系</h1><p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
+        <p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
 <p>用户表有OPEN_ID字段，真实信息表有手机号字段。</p>
 <p>用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据；</p>
 <p>没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。</p>
@@ -536,7 +536,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="EntityManager常用方法简介"><a href="#EntityManager常用方法简介" class="headerlink" title="EntityManager常用方法简介"></a>EntityManager常用方法简介</h1><p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
+        <p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
 <p><img src="https://img2018.cnblogs.com/blog/1537244/201811/1537244-20181129115140272-2002187652.jpg" alt="img"></p>
 <p>1.entityManager.persist(Object entity);　　新增数据；</p>
 <p>如果entity的主键不为空，而数据库没有该主键，会抛出异常；</p>
@@ -665,7 +665,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h1 id="查询某年某月一个月的数据，以日历的形式展示。"><a href="#查询某年某月一个月的数据，以日历的形式展示。" class="headerlink" title="查询某年某月一个月的数据，以日历的形式展示。"></a>查询某年某月一个月的数据，以日历的形式展示。</h1><p>市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等</p>
+        <p>市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等</p>
 <p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/dayima.png?raw=true" alt="img"></p>
 <p>那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。</p>
 <p>数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-MM-dd)，还可以是Date类型.</p>
