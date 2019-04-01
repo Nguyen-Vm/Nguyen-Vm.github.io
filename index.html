@@ -392,10 +392,10 @@
 
 
   
-    <article id="post-基于EntityManager的分页查询解决方案" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-微信公众号开发——用户账号体系" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <h3 href="/2019/01/28/基于EntityManager的分页查询解决方案/" class="article-date">
-  <time datetime="2019-01-27T16:00:00.000Z" itemprop="datePublished">2019-01-28</time>
+    <h3 href="/2019/01/11/微信公众号开发——用户账号体系/" class="article-date">
+  <time datetime="2019-01-10T16:00:00.000Z" itemprop="datePublished">2019-01-11</time>
 </h3>
     
   </div>
@@ -408,7 +408,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/28/基于EntityManager的分页查询解决方案/">基于EntityManager的分页查询解决方案</a>
+      <a class="article-title" href="/2019/01/11/微信公众号开发——用户账号体系/">微信公众号开发——用户账号体系</a>
     </h1>
   
 
@@ -417,34 +417,36 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>需求：分页查询学生信息</p>
-<p>项目环境：Spring Boot 2.0.6.RELEASE</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.6.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;/parent&gt;</span><br></pre></td></tr></table></figure>
-<p>Maven依赖：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.1.38&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-<p>分页查询返回体类:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public class IPagination&lt;T&gt; &#123;</span><br><span class="line">    /** 当前页数 **/</span><br><span class="line">    private int pager;</span><br><span class="line">    /** 总页数 **/</span><br><span class="line">    private int pages;</span><br><span class="line">    /** 每页条数 **/</span><br><span class="line">    private int size;</span><br><span class="line">    /** 总条数 **/</span><br><span class="line">    private long total;</span><br><span class="line">    /** 忽略数据条数 **/</span><br><span class="line">    private int offset;</span><br><span class="line">    /** 列表数据 **/</span><br><span class="line">    private List&lt;T&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public IPagination() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public IPagination(int pager, int size) &#123;</span><br><span class="line">        if (pager &gt;= 1 &amp;&amp; size &gt;= 1) &#123;</span><br><span class="line">            this.pager = pager;</span><br><span class="line">            this.size = size;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new RuntimeException(&quot;invalid pager: &quot; + pager + &quot; or size: &quot; + size);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static IPagination create(int pager, int size) &#123;</span><br><span class="line">        return new IPagination(pager, size);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setTotal(long total) &#123;</span><br><span class="line">        this.total = total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setList(List&lt;T&gt; list) &#123;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getSize() &#123;</span><br><span class="line">        return size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getPager() &#123;</span><br><span class="line">        return pager == 0 ? 1 : pager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getOffset() &#123;</span><br><span class="line">        return size * (getPager() - 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getPages() &#123;</span><br><span class="line">        return Double.valueOf(Math.ceil((double) total / (double) size)).intValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public long getTotal() &#123;</span><br><span class="line">        return total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public List&lt;T&gt; getList() &#123;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Controller层：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/api/student&quot;)</span><br><span class="line">public class StudentApiController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private StudentService studentService;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/search&quot;)</span><br><span class="line">    public IPagination&lt;StudentResponse&gt; search(@RequestBody StudentSearchRequest request) &#123;</span><br><span class="line">        return studentService.search(request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>就一个简单的POST请求，请求体有页数、每页条数、查询参数等属性。</p>
-<p>Service层：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class StudentService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private PaginationMapper paginationMapper;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询学生信息</span><br><span class="line">     * @param request</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public IPagination&lt;StudentResponse&gt; search(StudentSearchRequest request) &#123;</span><br><span class="line">        // 拼接SQL语句</span><br><span class="line">        StringBuilder sql = new StringBuilder(&quot;SELECT id, name FROM t_galidun_student &quot;);</span><br><span class="line">        // 查询需要的参数，先存进Map</span><br><span class="line">        Map&lt;String, Object&gt; maps = new HashMap&lt;&gt;();</span><br><span class="line">        if (request.name != null) &#123;</span><br><span class="line">            sql.append(&quot;WHERE name LIKE :name&quot;);</span><br><span class="line">            maps.put(&quot;name&quot;, &quot;%&quot; + request.name + &quot;%&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        // 调用通用方法返回查询结果</span><br><span class="line">        return paginationMapper.nativeSearch(request.nowPage, request.pageSize, sql.toString(), maps, StudentResponse.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这一层主要是拼接sql，提供查询需要的参数，最后调用通用方法返回结果。</p>
-<p>Mapper层：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class PaginationMapper &#123;</span><br><span class="line"></span><br><span class="line">    @PersistenceContext</span><br><span class="line">    private EntityManager entityManager;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询通用方法</span><br><span class="line">     *</span><br><span class="line">     * @param nowPage  当前页</span><br><span class="line">     * @param pageSize 每页条数</span><br><span class="line">     * @param sql      sql语句</span><br><span class="line">     * @param maps     sql查询参数</span><br><span class="line">     * @param clazz    返回类型</span><br><span class="line">     * @param &lt;T&gt;</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public &lt;T&gt; IPagination&lt;T&gt; search(Integer nowPage, Integer pageSize, String sql, Map&lt;String, Object&gt; maps, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">        // 初始化分页返回体</span><br><span class="line">        IPagination pagination = IPagination.create(nowPage, pageSize);</span><br><span class="line">        // 查询结果总条数</span><br><span class="line">        int total = getQueryWithParameters(entityManager.createNativeQuery(sql), maps).getResultList().size();</span><br><span class="line">        pagination.setTotal(total);</span><br><span class="line">        if (total == 0) return pagination;</span><br><span class="line">        Query query = getQueryWithParameters(entityManager.createNativeQuery(sql), maps);</span><br><span class="line">        // 忽略指定条数据，返回一页数据</span><br><span class="line">        query.setFirstResult(pagination.getOffset()).setMaxResults(pagination.getSize());</span><br><span class="line">        // 指定返回对象类型</span><br><span class="line">        query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.aliasToBean(clazz));</span><br><span class="line">        // 列表数据</span><br><span class="line">        pagination.setList(query.getResultList());</span><br><span class="line">        return pagination;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置查询所需的参数</span><br><span class="line">     *</span><br><span class="line">     * @param query</span><br><span class="line">     * @param maps</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private Query getQueryWithParameters(Query query, Map&lt;String, Object&gt; maps) &#123;</span><br><span class="line">        if (maps.size() &gt; 0) &#123;</span><br><span class="line">            for (String key : maps.keySet()) &#123;</span><br><span class="line">                query.setParameter(key, maps.get(key));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return query;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这是个通用的方法，只需要传入查询的页数，每页数据条数，sql语句，查询参数，返回体类型即可。</p>
-<p>每个Query只能调用一次getResultList方法，调用之后再次调用就会抛异常，所以方法中有两处entityManager.createNaticeQuery(sql)，一次是为了查询总条数，另一次是查询当前页的数据。</p>
-<p>查询总条数的时候可以改为使用COUNT（主键或者非NULL索引）；读者有其他能提高查询性能的方法，方便的话，分享一下吧。</p>
-<p>项目地址：<a href="https://github.com/Nguyen-Vm/entity-manager" target="_blank" rel="noopener">https://github.com/Nguyen-Vm/entity-manager</a></p>
+        <p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
+<p>用户表有OPEN_ID字段，真实信息表有手机号字段。</p>
+<p>用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据；</p>
+<p>没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。</p>
+<p>公众号菜单入口进行微信网页授权获取用户的OPEN_ID，并将其保存在COOKIE中；用户验证完手机号后，将手机号也存进COOKIE；</p>
+<p>微信授权后，有OPEN_ID：</p>
+<p>　　先从COOKIE中获取手机号，得到空串或者手机号：</p>
+<p>　　　　手机号查询真实查询真实信息:　</p>
+<p>　　　　　　找到真实信息，真实信息查询用户数据：</p>
+<p>　　　　　　　　找到用户数据，赋值OPEN_ID；——老用户授权，完善或覆盖OPEN_ID。</p>
+<p>　　　　　　　　没找到用户数据，添加有OPEN_ID，真实信息主键ID的用户数据；——手机号没有关联系统用户，基本不会出现。</p>
+<p>　　　　　　没找到真实信息，OPEN_ID查询用户数据:</p>
+<p>　　　　　　　　没有找到，添加有OPEN_ID的用户数据，称之为游客；找打了，就不添加。——游客，也有可能是COOKIE-PHONE失效，之后会删除。</p>
+<p>验证手机号，有手机号：</p>
+<p>　　通过手机号查询真实信息，有则返回真实信息主键ID，没有添加有手机号的真实信息数据，返回主键ID；</p>
+<p>　　从COOKIE中获取OPEN_ID，得到空串或OPEN_ID：</p>
+<p>　　　　真实信息主键ID查询用户数据：</p>
+<p>　　　　　　没有找到用户数据：</p>
+<p>　　　　　　　　如果OPEN_ID是空串，初始化一条用户数据；关联手机号，返回验签；——COOKIE中没有OPEN_ID的游客注册</p>
+<p>　　　　　　　　OPEN_ID不是空串，用该OPEN_ID去数据库找到该用户数据；关联手机号，返回验签；——游客注册</p>
+<p>　　　　　　找到用户数据，删除所有该OPEN_ID下，真实信息为NULL的用户数据；如果用户数据OPNE_ID为空，赋值OPEN_ID，保存用户数据，返回验签。——老用户登录</p>
 
       
     </div>
     <footer class="article-footer">
       <div class="article-footer-content">
         
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微信公众号/">微信公众号</a></li></ul>
 
-        <a data-url="https://nguyen-vm.github.io/2019/01/28/基于EntityManager的分页查询解决方案/" data-id="cjtxs8zgv0005gsw6eojhcqjk" class="article-share-link">分享到</a>
+        <a data-url="https://nguyen-vm.github.io/2019/01/11/微信公众号开发——用户账号体系/" data-id="cjtxs8zgr0003gsw6bxcy8d58" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -509,10 +511,10 @@
 
 
   
-    <article id="post-EntityManager常用方法简介" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-基于EntityManager的分页查询解决方案" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <h3 href="/2018/12/29/EntityManager常用方法简介/" class="article-date">
-  <time datetime="2018-12-28T16:00:00.000Z" itemprop="datePublished">2018-12-29</time>
+    <h3 href="/2018/12/28/基于EntityManager的分页查询解决方案/" class="article-date">
+  <time datetime="2018-12-27T16:00:00.000Z" itemprop="datePublished">2018-12-28</time>
 </h3>
     
   </div>
@@ -525,7 +527,72 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/29/EntityManager常用方法简介/">EntityManager常用方法简介</a>
+      <a class="article-title" href="/2018/12/28/基于EntityManager的分页查询解决方案/">基于EntityManager的分页查询解决方案</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>需求：分页查询学生信息</p>
+<p>项目环境：Spring Boot 2.0.6.RELEASE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.6.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;/parent&gt;</span><br></pre></td></tr></table></figure>
+<p>Maven依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.1.38&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>分页查询返回体类:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public class IPagination&lt;T&gt; &#123;</span><br><span class="line">    /** 当前页数 **/</span><br><span class="line">    private int pager;</span><br><span class="line">    /** 总页数 **/</span><br><span class="line">    private int pages;</span><br><span class="line">    /** 每页条数 **/</span><br><span class="line">    private int size;</span><br><span class="line">    /** 总条数 **/</span><br><span class="line">    private long total;</span><br><span class="line">    /** 忽略数据条数 **/</span><br><span class="line">    private int offset;</span><br><span class="line">    /** 列表数据 **/</span><br><span class="line">    private List&lt;T&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public IPagination() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public IPagination(int pager, int size) &#123;</span><br><span class="line">        if (pager &gt;= 1 &amp;&amp; size &gt;= 1) &#123;</span><br><span class="line">            this.pager = pager;</span><br><span class="line">            this.size = size;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new RuntimeException(&quot;invalid pager: &quot; + pager + &quot; or size: &quot; + size);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static IPagination create(int pager, int size) &#123;</span><br><span class="line">        return new IPagination(pager, size);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setTotal(long total) &#123;</span><br><span class="line">        this.total = total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setList(List&lt;T&gt; list) &#123;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getSize() &#123;</span><br><span class="line">        return size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getPager() &#123;</span><br><span class="line">        return pager == 0 ? 1 : pager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getOffset() &#123;</span><br><span class="line">        return size * (getPager() - 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getPages() &#123;</span><br><span class="line">        return Double.valueOf(Math.ceil((double) total / (double) size)).intValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public long getTotal() &#123;</span><br><span class="line">        return total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public List&lt;T&gt; getList() &#123;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Controller层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/api/student&quot;)</span><br><span class="line">public class StudentApiController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private StudentService studentService;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/search&quot;)</span><br><span class="line">    public IPagination&lt;StudentResponse&gt; search(@RequestBody StudentSearchRequest request) &#123;</span><br><span class="line">        return studentService.search(request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就一个简单的POST请求，请求体有页数、每页条数、查询参数等属性。</p>
+<p>Service层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class StudentService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private PaginationMapper paginationMapper;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询学生信息</span><br><span class="line">     * @param request</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public IPagination&lt;StudentResponse&gt; search(StudentSearchRequest request) &#123;</span><br><span class="line">        // 拼接SQL语句</span><br><span class="line">        StringBuilder sql = new StringBuilder(&quot;SELECT id, name FROM t_galidun_student &quot;);</span><br><span class="line">        // 查询需要的参数，先存进Map</span><br><span class="line">        Map&lt;String, Object&gt; maps = new HashMap&lt;&gt;();</span><br><span class="line">        if (request.name != null) &#123;</span><br><span class="line">            sql.append(&quot;WHERE name LIKE :name&quot;);</span><br><span class="line">            maps.put(&quot;name&quot;, &quot;%&quot; + request.name + &quot;%&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        // 调用通用方法返回查询结果</span><br><span class="line">        return paginationMapper.nativeSearch(request.nowPage, request.pageSize, sql.toString(), maps, StudentResponse.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这一层主要是拼接sql，提供查询需要的参数，最后调用通用方法返回结果。</p>
+<p>Mapper层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class PaginationMapper &#123;</span><br><span class="line"></span><br><span class="line">    @PersistenceContext</span><br><span class="line">    private EntityManager entityManager;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询通用方法</span><br><span class="line">     *</span><br><span class="line">     * @param nowPage  当前页</span><br><span class="line">     * @param pageSize 每页条数</span><br><span class="line">     * @param sql      sql语句</span><br><span class="line">     * @param maps     sql查询参数</span><br><span class="line">     * @param clazz    返回类型</span><br><span class="line">     * @param &lt;T&gt;</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public &lt;T&gt; IPagination&lt;T&gt; search(Integer nowPage, Integer pageSize, String sql, Map&lt;String, Object&gt; maps, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">        // 初始化分页返回体</span><br><span class="line">        IPagination pagination = IPagination.create(nowPage, pageSize);</span><br><span class="line">        // 查询结果总条数</span><br><span class="line">        int total = getQueryWithParameters(entityManager.createNativeQuery(sql), maps).getResultList().size();</span><br><span class="line">        pagination.setTotal(total);</span><br><span class="line">        if (total == 0) return pagination;</span><br><span class="line">        Query query = getQueryWithParameters(entityManager.createNativeQuery(sql), maps);</span><br><span class="line">        // 忽略指定条数据，返回一页数据</span><br><span class="line">        query.setFirstResult(pagination.getOffset()).setMaxResults(pagination.getSize());</span><br><span class="line">        // 指定返回对象类型</span><br><span class="line">        query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.aliasToBean(clazz));</span><br><span class="line">        // 列表数据</span><br><span class="line">        pagination.setList(query.getResultList());</span><br><span class="line">        return pagination;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置查询所需的参数</span><br><span class="line">     *</span><br><span class="line">     * @param query</span><br><span class="line">     * @param maps</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private Query getQueryWithParameters(Query query, Map&lt;String, Object&gt; maps) &#123;</span><br><span class="line">        if (maps.size() &gt; 0) &#123;</span><br><span class="line">            for (String key : maps.keySet()) &#123;</span><br><span class="line">                query.setParameter(key, maps.get(key));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return query;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是个通用的方法，只需要传入查询的页数，每页数据条数，sql语句，查询参数，返回体类型即可。</p>
+<p>每个Query只能调用一次getResultList方法，调用之后再次调用就会抛异常，所以方法中有两处entityManager.createNaticeQuery(sql)，一次是为了查询总条数，另一次是查询当前页的数据。</p>
+<p>查询总条数的时候可以改为使用COUNT（主键或者非NULL索引）；读者有其他能提高查询性能的方法，方便的话，分享一下吧。</p>
+<p>项目地址：<a href="https://github.com/Nguyen-Vm/entity-manager" target="_blank" rel="noopener">https://github.com/Nguyen-Vm/entity-manager</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
+
+        <a data-url="https://nguyen-vm.github.io/2018/12/28/基于EntityManager的分页查询解决方案/" data-id="cjtxs8zgv0005gsw6eojhcqjk" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-EntityManager常用方法简介" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2018/12/20/EntityManager常用方法简介/" class="article-date">
+  <time datetime="2018-12-19T16:00:00.000Z" itemprop="datePublished">2018-12-20</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/20/EntityManager常用方法简介/">EntityManager常用方法简介</a>
     </h1>
   
 
@@ -535,7 +602,7 @@
       
         
         <p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
-<p><img src="https://img2018.cnblogs.com/blog/1537244/201811/1537244-20181129115140272-2002187652.jpg" alt="img"></p>
+<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/entity-manager.jpg?raw=true" alt="img"></p>
 <p>1.entityManager.persist(Object entity);　　新增数据；</p>
 <p>如果entity的主键不为空，而数据库没有该主键，会抛出异常；</p>
 <p>如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；</p>
@@ -560,74 +627,7 @@
         
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
 
-        <a data-url="https://nguyen-vm.github.io/2018/12/29/EntityManager常用方法简介/" data-id="cjtxs8zg90000gsw6b6ncirau" class="article-share-link">分享到</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-微信公众号开发——用户账号体系" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2018/12/11/微信公众号开发——用户账号体系/" class="article-date">
-  <time datetime="2018-12-10T16:00:00.000Z" itemprop="datePublished">2018-12-11</time>
-</h3>
-    
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/11/微信公众号开发——用户账号体系/">微信公众号开发——用户账号体系</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
-<p>用户表有OPEN_ID字段，真实信息表有手机号字段。</p>
-<p>用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据；</p>
-<p>没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。</p>
-<p>公众号菜单入口进行微信网页授权获取用户的OPEN_ID，并将其保存在COOKIE中；用户验证完手机号后，将手机号也存进COOKIE；</p>
-<p>微信授权后，有OPEN_ID：</p>
-<p>　　先从COOKIE中获取手机号，得到空串或者手机号：</p>
-<p>　　　　手机号查询真实查询真实信息:　</p>
-<p>　　　　　　找到真实信息，真实信息查询用户数据：</p>
-<p>　　　　　　　　找到用户数据，赋值OPEN_ID；——老用户授权，完善或覆盖OPEN_ID。</p>
-<p>　　　　　　　　没找到用户数据，添加有OPEN_ID，真实信息主键ID的用户数据；——手机号没有关联系统用户，基本不会出现。</p>
-<p>　　　　　　没找到真实信息，OPEN_ID查询用户数据:</p>
-<p>　　　　　　　　没有找到，添加有OPEN_ID的用户数据，称之为游客；找打了，就不添加。——游客，也有可能是COOKIE-PHONE失效，之后会删除。</p>
-<p>验证手机号，有手机号：</p>
-<p>　　通过手机号查询真实信息，有则返回真实信息主键ID，没有添加有手机号的真实信息数据，返回主键ID；</p>
-<p>　　从COOKIE中获取OPEN_ID，得到空串或OPEN_ID：</p>
-<p>　　　　真实信息主键ID查询用户数据：</p>
-<p>　　　　　　没有找到用户数据：</p>
-<p>　　　　　　　　如果OPEN_ID是空串，初始化一条用户数据；关联手机号，返回验签；——COOKIE中没有OPEN_ID的游客注册</p>
-<p>　　　　　　　　OPEN_ID不是空串，用该OPEN_ID去数据库找到该用户数据；关联手机号，返回验签；——游客注册</p>
-<p>　　　　　　找到用户数据，删除所有该OPEN_ID下，真实信息为NULL的用户数据；如果用户数据OPNE_ID为空，赋值OPEN_ID，保存用户数据，返回验签。——老用户登录</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微信公众号/">微信公众号</a></li></ul>
-
-        <a data-url="https://nguyen-vm.github.io/2018/12/11/微信公众号开发——用户账号体系/" data-id="cjtxs8zgr0003gsw6bxcy8d58" class="article-share-link">分享到</a>
+        <a data-url="https://nguyen-vm.github.io/2018/12/20/EntityManager常用方法简介/" data-id="cjtxs8zg90000gsw6b6ncirau" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -766,7 +766,7 @@
           </li>
         
           <li>
-            <a href="/2019/01/28/基于EntityManager的分页查询解决方案/">基于EntityManager的分页查询解决方案</a>
+            <a href="/2019/01/11/微信公众号开发——用户账号体系/">微信公众号开发——用户账号体系</a>
           </li>
         
           <li>
@@ -774,7 +774,7 @@
           </li>
         
           <li>
-            <a href="/2018/12/29/EntityManager常用方法简介/">EntityManager常用方法简介</a>
+            <a href="/2018/12/28/基于EntityManager的分页查询解决方案/">基于EntityManager的分页查询解决方案</a>
           </li>
         
       </ul>
