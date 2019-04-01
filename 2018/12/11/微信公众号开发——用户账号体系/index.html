@@ -5,20 +5,20 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   
-  <title>Java基本数据类型 | restfulvim</title>
+  <title>微信公众号开发——用户账号体系 | restfulvim</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Java中有哪些基本数据类型？答：只有两种值的boolean，占一个字节的byte，占两个字节的char、short占四个字节的int、float，占八个字节的long，double。">
-<meta name="keywords" content="Java">
+  <meta name="description" content="微信公众号开发——用户账号体系不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，">
+<meta name="keywords" content="微信公众号">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java基本数据类型">
-<meta property="og:url" content="https://nguyen-vm.github.io/2018/11/15/Java基本数据类型/index.html">
+<meta property="og:title" content="微信公众号开发——用户账号体系">
+<meta property="og:url" content="https://nguyen-vm.github.io/2018/12/11/微信公众号开发——用户账号体系/index.html">
 <meta property="og:site_name" content="restfulvim">
-<meta property="og:description" content="Java中有哪些基本数据类型？答：只有两种值的boolean，占一个字节的byte，占两个字节的char、short占四个字节的int、float，占八个字节的long，double。">
+<meta property="og:description" content="微信公众号开发——用户账号体系不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-04-01T03:01:31.700Z">
+<meta property="og:updated_time" content="2019-04-01T03:08:55.191Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java基本数据类型">
-<meta name="twitter:description" content="Java中有哪些基本数据类型？答：只有两种值的boolean，占一个字节的byte，占两个字节的char、short占四个字节的int、float，占八个字节的long，double。">
+<meta name="twitter:title" content="微信公众号开发——用户账号体系">
+<meta name="twitter:description" content="微信公众号开发——用户账号体系不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表； 用户表有OPEN_ID字段，真实信息表有手机号字段。 用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据； 没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。 公众号菜单入口进行微信网页授权获取用户的OPEN_ID，">
   
     <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
   
@@ -81,10 +81,10 @@
 </header>
 
     <div class="outer">
-      <section id="main"><article id="post-Java基本数据类型" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-微信公众号开发——用户账号体系" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <h3 href="/2018/11/15/Java基本数据类型/" class="article-date">
-  <time datetime="2018-11-14T16:00:00.000Z" itemprop="datePublished">2018-11-15</time>
+    <h3 href="/2018/12/11/微信公众号开发——用户账号体系/" class="article-date">
+  <time datetime="2018-12-10T16:00:00.000Z" itemprop="datePublished">2018-12-11</time>
 </h3>
     
   </div>
@@ -97,7 +97,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Java基本数据类型
+      微信公众号开发——用户账号体系
     </h1>
   
 
@@ -106,16 +106,36 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Java中有哪些基本数据类型？<br>答：只有两种值的boolean，占一个字节的byte，占两个字节的char、short占四个字节的int、float，占八个字节的long，double。</p>
+        <h1 id="微信公众号开发——用户账号体系"><a href="#微信公众号开发——用户账号体系" class="headerlink" title="微信公众号开发——用户账号体系"></a>微信公众号开发——用户账号体系</h1><p>不管什么应用，用户账号体系都可以设置两张表，一张系统用户表，一张真实信息表；</p>
+<p>用户表有OPEN_ID字段，真实信息表有手机号字段。</p>
+<p>用户进入系统，生成一条用户数据；用户验证手机号后，生成一条真实信息数据；这条真实信息数据关联了那条用户数据；</p>
+<p>没有关联真实信息的用户，称为游客；关联了真实信息的用户，称为注册用户。</p>
+<p>公众号菜单入口进行微信网页授权获取用户的OPEN_ID，并将其保存在COOKIE中；用户验证完手机号后，将手机号也存进COOKIE；</p>
+<p>微信授权后，有OPEN_ID：</p>
+<p>　　先从COOKIE中获取手机号，得到空串或者手机号：</p>
+<p>　　　　手机号查询真实查询真实信息:　</p>
+<p>　　　　　　找到真实信息，真实信息查询用户数据：</p>
+<p>　　　　　　　　找到用户数据，赋值OPEN_ID；——老用户授权，完善或覆盖OPEN_ID。</p>
+<p>　　　　　　　　没找到用户数据，添加有OPEN_ID，真实信息主键ID的用户数据；——手机号没有关联系统用户，基本不会出现。</p>
+<p>　　　　　　没找到真实信息，OPEN_ID查询用户数据:</p>
+<p>　　　　　　　　没有找到，添加有OPEN_ID的用户数据，称之为游客；找打了，就不添加。——游客，也有可能是COOKIE-PHONE失效，之后会删除。</p>
+<p>验证手机号，有手机号：</p>
+<p>　　通过手机号查询真实信息，有则返回真实信息主键ID，没有添加有手机号的真实信息数据，返回主键ID；</p>
+<p>　　从COOKIE中获取OPEN_ID，得到空串或OPEN_ID：</p>
+<p>　　　　真实信息主键ID查询用户数据：</p>
+<p>　　　　　　没有找到用户数据：</p>
+<p>　　　　　　　　如果OPEN_ID是空串，初始化一条用户数据；关联手机号，返回验签；——COOKIE中没有OPEN_ID的游客注册</p>
+<p>　　　　　　　　OPEN_ID不是空串，用该OPEN_ID去数据库找到该用户数据；关联手机号，返回验签；——游客注册</p>
+<p>　　　　　　找到用户数据，删除所有该OPEN_ID下，真实信息为NULL的用户数据；如果用户数据OPNE_ID为空，赋值OPEN_ID，保存用户数据，返回验签。——老用户登录</p>
 
       
     </div>
     <footer class="article-footer">
       <div class="article-footer-content">
         
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微信公众号/">微信公众号</a></li></ul>
 
-        <a data-url="https://nguyen-vm.github.io/2018/11/15/Java基本数据类型/" data-id="cjtxr1ocr000174w6d8wh833j" class="article-share-link">分享到</a>
+        <a data-url="https://nguyen-vm.github.io/2018/12/11/微信公众号开发——用户账号体系/" data-id="cjtxs8zgr0003gsw6bxcy8d58" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -126,15 +146,20 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/11/16/查询某年某月一个月的数据，以日历的形式展示/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/01/02/MySQL-数据合并/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">
         
-          查询某年某月一个月的数据，以日历的形式展示
+          MySQL-数据合并
         
       </div>
     </a>
   
+  
+    <a href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">《高性能MySQL(第3版)》摘要——索引篇</div>
+    </a>
   
 </nav>
 

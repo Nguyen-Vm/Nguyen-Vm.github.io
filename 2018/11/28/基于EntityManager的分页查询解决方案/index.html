@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>基于EntityManager的分页查询解决方案 | restfulvim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="需求：分页查询学生信息 项目环境：Spring Boot 2.0.6.RELEASE 123456&amp;lt;parent&amp;gt;    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt;    &amp;lt;ver">
+<meta name="keywords" content="EntityManager">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于EntityManager的分页查询解决方案">
+<meta property="og:url" content="https://nguyen-vm.github.io/2018/11/28/基于EntityManager的分页查询解决方案/index.html">
+<meta property="og:site_name" content="restfulvim">
+<meta property="og:description" content="需求：分页查询学生信息 项目环境：Spring Boot 2.0.6.RELEASE 123456&amp;lt;parent&amp;gt;    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt;    &amp;lt;ver">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-01T03:06:05.535Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于EntityManager的分页查询解决方案">
+<meta name="twitter:description" content="需求：分页查询学生信息 项目环境：Spring Boot 2.0.6.RELEASE 123456&amp;lt;parent&amp;gt;    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;spring-boot-starter-parent&amp;lt;/artifactId&amp;gt;    &amp;lt;ver">
+  
+    <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+</html>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/myname"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">My Blog</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara">MyLogo</li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/">Home</a>
+      
+        <a class="main-nav-link" href="/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/about">About</a>
+      
+      <a class="main-nav-link st-search-show-outputs">搜索</a>
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-基于EntityManager的分页查询解决方案" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2018/11/28/基于EntityManager的分页查询解决方案/" class="article-date">
+  <time datetime="2018-11-27T16:00:00.000Z" itemprop="datePublished">2018-11-28</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基于EntityManager的分页查询解决方案
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>需求：分页查询学生信息</p>
+<p>项目环境：Spring Boot 2.0.6.RELEASE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.6.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;/parent&gt;</span><br></pre></td></tr></table></figure>
+<p>Maven依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.1.38&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>分页查询返回体类:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">public class IPagination&lt;T&gt; &#123;</span><br><span class="line">    /** 当前页数 **/</span><br><span class="line">    private int pager;</span><br><span class="line">    /** 总页数 **/</span><br><span class="line">    private int pages;</span><br><span class="line">    /** 每页条数 **/</span><br><span class="line">    private int size;</span><br><span class="line">    /** 总条数 **/</span><br><span class="line">    private long total;</span><br><span class="line">    /** 忽略数据条数 **/</span><br><span class="line">    private int offset;</span><br><span class="line">    /** 列表数据 **/</span><br><span class="line">    private List&lt;T&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public IPagination() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public IPagination(int pager, int size) &#123;</span><br><span class="line">        if (pager &gt;= 1 &amp;&amp; size &gt;= 1) &#123;</span><br><span class="line">            this.pager = pager;</span><br><span class="line">            this.size = size;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new RuntimeException(&quot;invalid pager: &quot; + pager + &quot; or size: &quot; + size);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static IPagination create(int pager, int size) &#123;</span><br><span class="line">        return new IPagination(pager, size);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setTotal(long total) &#123;</span><br><span class="line">        this.total = total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setList(List&lt;T&gt; list) &#123;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getSize() &#123;</span><br><span class="line">        return size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getPager() &#123;</span><br><span class="line">        return pager == 0 ? 1 : pager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getOffset() &#123;</span><br><span class="line">        return size * (getPager() - 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getPages() &#123;</span><br><span class="line">        return Double.valueOf(Math.ceil((double) total / (double) size)).intValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public long getTotal() &#123;</span><br><span class="line">        return total;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public List&lt;T&gt; getList() &#123;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Controller层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/api/student&quot;)</span><br><span class="line">public class StudentApiController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private StudentService studentService;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/search&quot;)</span><br><span class="line">    public IPagination&lt;StudentResponse&gt; search(@RequestBody StudentSearchRequest request) &#123;</span><br><span class="line">        return studentService.search(request);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就一个简单的POST请求，请求体有页数、每页条数、查询参数等属性。</p>
+<p>Service层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class StudentService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private PaginationMapper paginationMapper;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询学生信息</span><br><span class="line">     * @param request</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public IPagination&lt;StudentResponse&gt; search(StudentSearchRequest request) &#123;</span><br><span class="line">        // 拼接SQL语句</span><br><span class="line">        StringBuilder sql = new StringBuilder(&quot;SELECT id, name FROM t_galidun_student &quot;);</span><br><span class="line">        // 查询需要的参数，先存进Map</span><br><span class="line">        Map&lt;String, Object&gt; maps = new HashMap&lt;&gt;();</span><br><span class="line">        if (request.name != null) &#123;</span><br><span class="line">            sql.append(&quot;WHERE name LIKE :name&quot;);</span><br><span class="line">            maps.put(&quot;name&quot;, &quot;%&quot; + request.name + &quot;%&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        // 调用通用方法返回查询结果</span><br><span class="line">        return paginationMapper.nativeSearch(request.nowPage, request.pageSize, sql.toString(), maps, StudentResponse.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这一层主要是拼接sql，提供查询需要的参数，最后调用通用方法返回结果。</p>
+<p>Mapper层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class PaginationMapper &#123;</span><br><span class="line"></span><br><span class="line">    @PersistenceContext</span><br><span class="line">    private EntityManager entityManager;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询通用方法</span><br><span class="line">     *</span><br><span class="line">     * @param nowPage  当前页</span><br><span class="line">     * @param pageSize 每页条数</span><br><span class="line">     * @param sql      sql语句</span><br><span class="line">     * @param maps     sql查询参数</span><br><span class="line">     * @param clazz    返回类型</span><br><span class="line">     * @param &lt;T&gt;</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public &lt;T&gt; IPagination&lt;T&gt; search(Integer nowPage, Integer pageSize, String sql, Map&lt;String, Object&gt; maps, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">        // 初始化分页返回体</span><br><span class="line">        IPagination pagination = IPagination.create(nowPage, pageSize);</span><br><span class="line">        // 查询结果总条数</span><br><span class="line">        int total = getQueryWithParameters(entityManager.createNativeQuery(sql), maps).getResultList().size();</span><br><span class="line">        pagination.setTotal(total);</span><br><span class="line">        if (total == 0) return pagination;</span><br><span class="line">        Query query = getQueryWithParameters(entityManager.createNativeQuery(sql), maps);</span><br><span class="line">        // 忽略指定条数据，返回一页数据</span><br><span class="line">        query.setFirstResult(pagination.getOffset()).setMaxResults(pagination.getSize());</span><br><span class="line">        // 指定返回对象类型</span><br><span class="line">        query.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.aliasToBean(clazz));</span><br><span class="line">        // 列表数据</span><br><span class="line">        pagination.setList(query.getResultList());</span><br><span class="line">        return pagination;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置查询所需的参数</span><br><span class="line">     *</span><br><span class="line">     * @param query</span><br><span class="line">     * @param maps</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private Query getQueryWithParameters(Query query, Map&lt;String, Object&gt; maps) &#123;</span><br><span class="line">        if (maps.size() &gt; 0) &#123;</span><br><span class="line">            for (String key : maps.keySet()) &#123;</span><br><span class="line">                query.setParameter(key, maps.get(key));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return query;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是个通用的方法，只需要传入查询的页数，每页数据条数，sql语句，查询参数，返回体类型即可。</p>
+<p>每个Query只能调用一次getResultList方法，调用之后再次调用就会抛异常，所以方法中有两处entityManager.createNaticeQuery(sql)，一次是为了查询总条数，另一次是查询当前页的数据。</p>
+<p>查询总条数的时候可以改为使用COUNT（主键或者非NULL索引）；读者有其他能提高查询性能的方法，方便的话，分享一下吧。</p>
+<p>项目地址：<a href="https://github.com/Nguyen-Vm/entity-manager" target="_blank" rel="noopener">https://github.com/Nguyen-Vm/entity-manager</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
+
+        <a data-url="https://nguyen-vm.github.io/2018/11/28/基于EntityManager的分页查询解决方案/" data-id="cjtxs8zgv0005gsw6eojhcqjk" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/11/29/EntityManager常用方法简介/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          EntityManager常用方法简介
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/16/查询某年某月一个月的数据，以日历的形式展示/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">查询某年某月一个月的数据，以日历的形式展示</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/03/使用HttpURLConnection发送GET，POST请求/">使用HttpURLConnection发送GET，POST请求</a>
+          </li>
+        
+          <li>
+            <a href="/2019/01/02/MySQL-数据合并/">MySQL-数据合并</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/11/微信公众号开发——用户账号体系/">微信公众号开发——用户账号体系</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/">《高性能MySQL(第3版)》摘要——索引篇</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/29/EntityManager常用方法简介/">EntityManager常用方法简介</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EntityManager/">EntityManager</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微信公众号/">微信公众号</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 restfulvim<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">搜索</a>
+</nav>
+
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="返回顶部"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>
