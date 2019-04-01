@@ -5,15 +5,22 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   
-  <title>restfulvim</title>
+  <title>《高性能MySQL(第3版)》摘要——索引篇 | restfulvim</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="restfulvim">
-<meta property="og:url" content="https://nguyen-vm.github.io/index.html">
+  <meta name="description" content="简介 　　索引是存储引擎用于快速找到记录的一种数据结构。 　　索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对性能的影响愈发重要。当数据量较少且负载较低时，不恰当的索引对性能的影响可能还不明显，但当数据量逐渐增大时，性能则会急剧下降。 　　索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《高性能MySQL(第3版)》摘要——索引篇">
+<meta property="og:url" content="https://nguyen-vm.github.io/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/index.html">
 <meta property="og:site_name" content="restfulvim">
+<meta property="og:description" content="简介 　　索引是存储引擎用于快速找到记录的一种数据结构。 　　索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对性能的影响愈发重要。当数据量较少且负载较低时，不恰当的索引对性能的影响可能还不明显，但当数据量逐渐增大时，性能则会急剧下降。 　　索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/range-condition.png?raw=true">
+<meta property="og:updated_time" content="2019-03-31T17:30:17.391Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="restfulvim">
+<meta name="twitter:title" content="《高性能MySQL(第3版)》摘要——索引篇">
+<meta name="twitter:description" content="简介 　　索引是存储引擎用于快速找到记录的一种数据结构。 　　索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对性能的影响愈发重要。当数据量较少且负载较低时，不恰当的索引对性能的影响可能还不明显，但当数据量逐渐增大时，性能则会急剧下降。 　　索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建">
+<meta name="twitter:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/range-condition.png?raw=true">
   
     <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
   
@@ -76,9 +83,7 @@
 </header>
 
     <div class="outer">
-      <section id="main">
-  
-    <article id="post-《高性能MySQL(第3版)》摘要——索引篇" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-《高性能MySQL(第3版)》摘要——索引篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <h3 href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/" class="article-date">
   <time datetime="2018-12-04T06:33:30.000Z" itemprop="datePublished">2018-12-04</time>
@@ -93,8 +98,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/">《高性能MySQL(第3版)》摘要——索引篇</a>
+    <h1 class="article-title" itemprop="name">
+      《高性能MySQL(第3版)》摘要——索引篇
     </h1>
   
 
@@ -281,59 +286,21 @@
   </div>
   </div>
   
-</article>
-
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Java基本数据类型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2018/11/15/Java基本数据类型/" class="article-date">
-  <time datetime="2018-11-14T17:09:21.000Z" itemprop="datePublished">2018-11-15</time>
-</h3>
-    
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/15/Java基本数据类型/">Java基本数据类型</a>
-    </h1>
+    <a href="/2018/11/15/Java基本数据类型/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">Java基本数据类型</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <p>Java中有哪些基本数据类型？<br>答：只有两种值的boolean，占一个字节的byte，占两个字节的char、short占四个字节的int、float，占八个字节的long，double。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-
-        <a data-url="https://nguyen-vm.github.io/2018/11/15/Java基本数据类型/" data-id="cjtxr1ocr000174w6d8wh833j" class="article-share-link">分享到</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
   
 </article>
 
 
-
-  
-  
 </section>
       
       <aside id="sidebar">
