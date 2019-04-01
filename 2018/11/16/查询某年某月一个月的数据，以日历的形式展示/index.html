@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>查询某年某月一个月的数据，以日历的形式展示 | restfulvim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="查询某年某月一个月的数据，以日历的形式展示。市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等  那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。 数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询某年某月一个月的数据，以日历的形式展示">
+<meta property="og:url" content="https://nguyen-vm.github.io/2018/11/16/查询某年某月一个月的数据，以日历的形式展示/index.html">
+<meta property="og:site_name" content="restfulvim">
+<meta property="og:description" content="查询某年某月一个月的数据，以日历的形式展示。市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等  那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。 数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/dayima.png?raw=true">
+<meta property="og:updated_time" content="2019-04-01T03:01:14.124Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="查询某年某月一个月的数据，以日历的形式展示">
+<meta name="twitter:description" content="查询某年某月一个月的数据，以日历的形式展示。市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等  那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。 数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-">
+<meta name="twitter:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/dayima.png?raw=true">
+  
+    <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+</html>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/myname"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">My Blog</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara">MyLogo</li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+        <li class="cara"></li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/">Home</a>
+      
+        <a class="main-nav-link" href="/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/about">About</a>
+      
+      <a class="main-nav-link st-search-show-outputs">搜索</a>
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-查询某年某月一个月的数据，以日历的形式展示" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2018/11/16/查询某年某月一个月的数据，以日历的形式展示/" class="article-date">
+  <time datetime="2018-11-15T16:00:00.000Z" itemprop="datePublished">2018-11-16</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      查询某年某月一个月的数据，以日历的形式展示
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <h1 id="查询某年某月一个月的数据，以日历的形式展示。"><a href="#查询某年某月一个月的数据，以日历的形式展示。" class="headerlink" title="查询某年某月一个月的数据，以日历的形式展示。"></a>查询某年某月一个月的数据，以日历的形式展示。</h1><p>市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等</p>
+<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/dayima.png?raw=true" alt="img"></p>
+<p>那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。</p>
+<p>数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-MM-dd)，还可以是Date类型.</p>
+<p>首先定义了一个这样的类来保存某天的数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class CalendarDate&lt;T&gt;&#123;</span><br><span class="line">    public Integer day;</span><br><span class="line"></span><br><span class="line">    public Integer weekDay;</span><br><span class="line"></span><br><span class="line">    public Boolean isToday;</span><br><span class="line"></span><br><span class="line">    public T info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>四个字段的意思分别是：day-这个月的第几天，weekDay-星期几，isToday-是否是今天，info-该天的用户数据。</p>
+<p>请求接口如下，请求需要年和月两个参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/calendar&quot;)</span><br><span class="line">public List&lt;CalendarDate&lt;List&lt;String&gt;&gt;&gt; calendarDates(@RequestParam Integer year, @RequestParam Integer month) &#123;</span><br><span class="line">    Function&lt;String, Optional&lt;List&lt;String&gt;&gt;&gt; function = day -&gt; &#123;</span><br><span class="line">        List&lt;String&gt; datas = new ArrayList&lt;&gt;();</span><br><span class="line">        datas.add(day); // DB: datas = tableMapper.findByDay(day);</span><br><span class="line">        return Optional.of(datas);</span><br><span class="line">    &#125;;</span><br><span class="line">    return DateUtils.calendar(year, month, function);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重点就是下面封装好的工具类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class DateUtils &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; List&lt;CalendarDate&lt;T&gt;&gt; calendar(int year, int month, Function&lt;String, Optional&lt;T&gt;&gt; function) &#123;</span><br><span class="line">        List&lt;CalendarDate&lt;T&gt;&gt; cdList = new ArrayList&lt;&gt;();</span><br><span class="line">        int monthDays = monthDays(year, month);</span><br><span class="line">        CalendarDate&lt;T&gt; cdR;</span><br><span class="line">        for (int day = 1; day &lt;= monthDays; day++) &#123;</span><br><span class="line">            cdR = new CalendarDate&lt;&gt;();</span><br><span class="line">            cdR.day = day;</span><br><span class="line">            LocalDate date = LocalDate.of(year, month, day);</span><br><span class="line">            cdR.weekDay = dayOfWeek(date);</span><br><span class="line">            cdR.isToday = isToday(date);</span><br><span class="line">            if (function != null) &#123;</span><br><span class="line">                Optional&lt;T&gt; optional = function.apply(date.toString());</span><br><span class="line">                if (optional.isPresent()) &#123;</span><br><span class="line">                    cdR.info = optional.get();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            cdList.add(cdR);</span><br><span class="line">        &#125;</span><br><span class="line">        return cdList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static boolean isToday(LocalDate date) &#123;</span><br><span class="line">        LocalDate today = LocalDate.now();</span><br><span class="line">        return date.getYear() == today.getYear() &amp;&amp;</span><br><span class="line">                date.getMonth() == today.getMonth() &amp;&amp;</span><br><span class="line">                date.getDayOfMonth() == today.getDayOfMonth();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int dayOfWeek(LocalDate date) &#123;</span><br><span class="line">        return null == date ? 0 : date.getDayOfWeek().getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int monthDays(int year, int month) &#123;</span><br><span class="line">        Calendar calendar = Calendar.getInstance();</span><br><span class="line">        calendar.set(Calendar.YEAR, year);</span><br><span class="line">        calendar.set(Calendar.MONTH, month - 1);</span><br><span class="line">        calendar.set(Calendar.DATE, 1);</span><br><span class="line">        calendar.roll(Calendar.DATE, -1);</span><br><span class="line">        return calendar.get(Calendar.DATE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>针对不同的业务要求，编写不一样的function函数，就可以返回日历形式的用户数据了。</p>
+<p>项目地址如下：<a href="https://github.com/cnblogs-projects/cnblogs-calendar" target="_blank" rel="noopener">https://github.com/cnblogs-projects/cnblogs-calendar</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+        <a data-url="https://nguyen-vm.github.io/2018/11/16/查询某年某月一个月的数据，以日历的形式展示/" data-id="cjtxrq8kv0000dsw6qvobgi5f" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          《高性能MySQL(第3版)》摘要——索引篇
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/15/Java基本数据类型/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">Java基本数据类型</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/01/03/使用HttpURLConnection发送GET，POST请求/">使用HttpURLConnection发送GET，POST请求</a>
+          </li>
+        
+          <li>
+            <a href="/2018/12/04/《高性能MySQL(第3版)》摘要——索引篇/">《高性能MySQL(第3版)》摘要——索引篇</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/16/查询某年某月一个月的数据，以日历的形式展示/">查询某年某月一个月的数据，以日历的形式展示</a>
+          </li>
+        
+          <li>
+            <a href="/2018/11/15/Java基本数据类型/">Java基本数据类型</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 restfulvim<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">搜索</a>
+</nav>
+
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="返回顶部"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>
