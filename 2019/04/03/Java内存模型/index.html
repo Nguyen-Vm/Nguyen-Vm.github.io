@@ -5,22 +5,22 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   
-  <title>EntityManager常用方法简介 | restfulvim</title>
+  <title>Java内存模型 | restfulvim</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；">
-<meta name="keywords" content="EntityManager">
+  <meta name="description" content="​    Java虚拟机规范中试图定义一种Java内存模型（JMM）来屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的内存访问效果。 ​    Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="EntityManager常用方法简介">
-<meta property="og:url" content="https://nguyen-vm.github.io/2019/04/01/EntityManager常用方法简介/index.html">
+<meta property="og:title" content="Java内存模型">
+<meta property="og:url" content="https://nguyen-vm.github.io/2019/04/03/Java内存模型/index.html">
 <meta property="og:site_name" content="restfulvim">
-<meta property="og:description" content="首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；">
+<meta property="og:description" content="​    Java虚拟机规范中试图定义一种Java内存模型（JMM）来屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的内存访问效果。 ​    Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/entity-manager.jpg?raw=true">
-<meta property="og:updated_time" content="2019-04-03T04:57:39.863Z">
+<meta property="og:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/jmm.jpg?raw=true">
+<meta property="og:updated_time" content="2019-04-03T08:40:02.739Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="EntityManager常用方法简介">
-<meta name="twitter:description" content="首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：  1.entityManager.persist(Object entity);　　新增数据； 如果entity的主键不为空，而数据库没有该主键，会抛出异常； 如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；">
-<meta name="twitter:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/entity-manager.jpg?raw=true">
+<meta name="twitter:title" content="Java内存模型">
+<meta name="twitter:description" content="​    Java虚拟机规范中试图定义一种Java内存模型（JMM）来屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的内存访问效果。 ​    Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包">
+<meta name="twitter:image" content="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/jmm.jpg?raw=true">
   
     <link rel="alternative" href="/atom.xml" title="restfulvim" type="application/atom+xml">
   
@@ -83,10 +83,10 @@
 </header>
 
     <div class="outer">
-      <section id="main"><article id="post-EntityManager常用方法简介" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-Java内存模型" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <h3 href="/2019/04/01/EntityManager常用方法简介/" class="article-date">
-  <time datetime="2019-03-31T16:00:00.000Z" itemprop="datePublished">2019-04-01</time>
+    <h3 href="/2019/04/03/Java内存模型/" class="article-date">
+  <time datetime="2019-04-02T16:00:00.000Z" itemprop="datePublished">2019-04-03</time>
 </h3>
     
   </div>
@@ -99,7 +99,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      EntityManager常用方法简介
+      Java内存模型
     </h1>
   
 
@@ -108,33 +108,19 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
-<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/entity-manager.jpg?raw=true" alt="img"></p>
-<p>1.entityManager.persist(Object entity);　　新增数据；</p>
-<p>如果entity的主键不为空，而数据库没有该主键，会抛出异常；</p>
-<p>如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；</p>
-<p>2.entityManager.find(Class<t> entityClass, Object primaryKey);　　根据主键查找数据；</t></p>
-<p>如果主键格式不正确，会抛出illegalArgumentException异常;</p>
-<p>如果主键在数据库未找到数据返回null；</p>
-<p>3.entityManager.remove(Object entity);　　删除数据；</p>
-<p>只能将Managed状态的Entity实例删除，由此Entity实例状态变为Removed；</p>
-<p>4.entityManager.merge(T entity);　　</p>
-<p>将 Detached状态的Entity实例转至Managed状态；</p>
-<p>5.entityManager.clear();</p>
-<p>将所有的Entity实例状态转至Detached状态；</p>
-<p>6.entityManager.flush();</p>
-<p>将所有Managed状态的Entity实例同步到数据库；</p>
-<p>7.entityManager.refresh(Object entity);</p>
-<p>加载Entity实例后，数据库该条数据被修改，refresh该实例，能得到数据库最新的修改，覆盖原来的Entity实例；</p>
-
+        <p>​    Java虚拟机规范中试图定义一种Java内存模型（JMM）来屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的内存访问效果。</p>
+<p>​    Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包括局部变量与方法参数，因为后者是线程私有的，不会被共享，自然就不会存在竞争问题。</p>
+<p>​    Java内存模型规定了所有的变量都存储在主内存中（虚拟机内存的一部分）。每条线程还有自己的工作内存，线程的工作内存中保存了被该线程使用到的变量的主内存副本拷贝，线程对变量的所有操作（读取、赋值等）都必须在工作内存中进行，而不能直接读写主内存中的变量。不同的线程之间也无法访问对方工作内存的变量，线程间变量值的传递均需要通过主内存来完成，线程、主内存、工作内存三者的交互关系如下图所示。</p>
+<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/jmm.jpg?raw=true" alt="img"></p>
+<h6 id="参考文献：《深入理解Java虚拟机》（第2版）周志明-著"><a href="#参考文献：《深入理解Java虚拟机》（第2版）周志明-著" class="headerlink" title="参考文献：《深入理解Java虚拟机》（第2版）周志明 著"></a>参考文献：《深入理解Java虚拟机》（第2版）周志明 著</h6>
       
     </div>
     <footer class="article-footer">
       <div class="article-footer-content">
         
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li></ul>
 
-        <a data-url="https://nguyen-vm.github.io/2019/04/01/EntityManager常用方法简介/" data-id="cjtxs8zg90000gsw6b6ncirau" class="article-share-link">分享到</a>
+        <a data-url="https://nguyen-vm.github.io/2019/04/03/Java内存模型/" data-id="cju0ynvo40000p8w6ershivpq" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -145,19 +131,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/04/01/查询某年某月一个月的数据，以日历的形式展示/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/04/03/Java内存区域与内存溢出异常/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">
         
-          查询某年某月一个月的数据，以日历的形式展示
+          Java内存区域与内存溢出异常
         
       </div>
     </a>
   
   
-    <a href="/2019/04/01/MySQL-数据合并/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/04/01/《高性能MySQL(第3版)》摘要——索引篇/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">MySQL-数据合并</div>
+      <div class="article-nav-title">《高性能MySQL(第3版)》摘要——索引篇</div>
     </a>
   
 </nav>
