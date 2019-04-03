@@ -338,6 +338,129 @@
 
 
   
+    <article id="post-查询某年某月一个月的数据，以日历的形式展示" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2019/04/01/查询某年某月一个月的数据，以日历的形式展示/" class="article-date">
+  <time datetime="2019-03-31T16:00:00.000Z" itemprop="datePublished">2019-04-01</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/01/查询某年某月一个月的数据，以日历的形式展示/">查询某年某月一个月的数据，以日历的形式展示</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等</p>
+<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/dayima.png?raw=true" alt="img"></p>
+<p>那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。</p>
+<p>数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-MM-dd)，还可以是Date类型.</p>
+<p>首先定义了一个这样的类来保存某天的数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class CalendarDate&lt;T&gt;&#123;</span><br><span class="line">    public Integer day;</span><br><span class="line"></span><br><span class="line">    public Integer weekDay;</span><br><span class="line"></span><br><span class="line">    public Boolean isToday;</span><br><span class="line"></span><br><span class="line">    public T info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>四个字段的意思分别是：day-这个月的第几天，weekDay-星期几，isToday-是否是今天，info-该天的用户数据。</p>
+<p>请求接口如下，请求需要年和月两个参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/calendar&quot;)</span><br><span class="line">public List&lt;CalendarDate&lt;List&lt;String&gt;&gt;&gt; calendarDates(@RequestParam Integer year, @RequestParam Integer month) &#123;</span><br><span class="line">    Function&lt;String, Optional&lt;List&lt;String&gt;&gt;&gt; function = day -&gt; &#123;</span><br><span class="line">        List&lt;String&gt; datas = new ArrayList&lt;&gt;();</span><br><span class="line">        datas.add(day); // DB: datas = tableMapper.findByDay(day);</span><br><span class="line">        return Optional.of(datas);</span><br><span class="line">    &#125;;</span><br><span class="line">    return DateUtils.calendar(year, month, function);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重点就是下面封装好的工具类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class DateUtils &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; List&lt;CalendarDate&lt;T&gt;&gt; calendar(int year, int month, Function&lt;String, Optional&lt;T&gt;&gt; function) &#123;</span><br><span class="line">        List&lt;CalendarDate&lt;T&gt;&gt; cdList = new ArrayList&lt;&gt;();</span><br><span class="line">        int monthDays = monthDays(year, month);</span><br><span class="line">        CalendarDate&lt;T&gt; cdR;</span><br><span class="line">        for (int day = 1; day &lt;= monthDays; day++) &#123;</span><br><span class="line">            cdR = new CalendarDate&lt;&gt;();</span><br><span class="line">            cdR.day = day;</span><br><span class="line">            LocalDate date = LocalDate.of(year, month, day);</span><br><span class="line">            cdR.weekDay = dayOfWeek(date);</span><br><span class="line">            cdR.isToday = isToday(date);</span><br><span class="line">            if (function != null) &#123;</span><br><span class="line">                Optional&lt;T&gt; optional = function.apply(date.toString());</span><br><span class="line">                if (optional.isPresent()) &#123;</span><br><span class="line">                    cdR.info = optional.get();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            cdList.add(cdR);</span><br><span class="line">        &#125;</span><br><span class="line">        return cdList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static boolean isToday(LocalDate date) &#123;</span><br><span class="line">        LocalDate today = LocalDate.now();</span><br><span class="line">        return date.getYear() == today.getYear() &amp;&amp;</span><br><span class="line">                date.getMonth() == today.getMonth() &amp;&amp;</span><br><span class="line">                date.getDayOfMonth() == today.getDayOfMonth();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int dayOfWeek(LocalDate date) &#123;</span><br><span class="line">        return null == date ? 0 : date.getDayOfWeek().getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int monthDays(int year, int month) &#123;</span><br><span class="line">        Calendar calendar = Calendar.getInstance();</span><br><span class="line">        calendar.set(Calendar.YEAR, year);</span><br><span class="line">        calendar.set(Calendar.MONTH, month - 1);</span><br><span class="line">        calendar.set(Calendar.DATE, 1);</span><br><span class="line">        calendar.roll(Calendar.DATE, -1);</span><br><span class="line">        return calendar.get(Calendar.DATE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>针对不同的业务要求，编写不一样的function函数，就可以返回日历形式的用户数据了。</p>
+<p>项目地址如下：<a href="https://github.com/cnblogs-projects/cnblogs-calendar" target="_blank" rel="noopener">https://github.com/cnblogs-projects/cnblogs-calendar</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+        <a data-url="https://nguyen-vm.github.io/2019/04/01/查询某年某月一个月的数据，以日历的形式展示/" data-id="cjtxrq8kv0000dsw6qvobgi5f" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-EntityManager常用方法简介" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2019/04/01/EntityManager常用方法简介/" class="article-date">
+  <time datetime="2019-03-31T16:00:00.000Z" itemprop="datePublished">2019-04-01</time>
+</h3>
+    
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/01/EntityManager常用方法简介/">EntityManager常用方法简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
+<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/entity-manager.jpg?raw=true" alt="img"></p>
+<p>1.entityManager.persist(Object entity);　　新增数据；</p>
+<p>如果entity的主键不为空，而数据库没有该主键，会抛出异常；</p>
+<p>如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；</p>
+<p>2.entityManager.find(Class<t> entityClass, Object primaryKey);　　根据主键查找数据；</t></p>
+<p>如果主键格式不正确，会抛出illegalArgumentException异常;</p>
+<p>如果主键在数据库未找到数据返回null；</p>
+<p>3.entityManager.remove(Object entity);　　删除数据；</p>
+<p>只能将Managed状态的Entity实例删除，由此Entity实例状态变为Removed；</p>
+<p>4.entityManager.merge(T entity);　　</p>
+<p>将 Detached状态的Entity实例转至Managed状态；</p>
+<p>5.entityManager.clear();</p>
+<p>将所有的Entity实例状态转至Detached状态；</p>
+<p>6.entityManager.flush();</p>
+<p>将所有Managed状态的Entity实例同步到数据库；</p>
+<p>7.entityManager.refresh(Object entity);</p>
+<p>加载Entity实例后，数据库该条数据被修改，refresh该实例，能得到数据库最新的修改，覆盖原来的Entity实例；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
+
+        <a data-url="https://nguyen-vm.github.io/2019/04/01/EntityManager常用方法简介/" data-id="cjtxs8zg90000gsw6b6ncirau" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-MySQL-数据合并" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <h3 href="/2019/04/01/MySQL-数据合并/" class="article-date">
@@ -511,133 +634,10 @@
 
 
   
-    <article id="post-查询某年某月一个月的数据，以日历的形式展示" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2018/04/01/查询某年某月一个月的数据，以日历的形式展示/" class="article-date">
-  <time datetime="2018-03-31T16:00:00.000Z" itemprop="datePublished">2018-04-01</time>
-</h3>
-    
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/01/查询某年某月一个月的数据，以日历的形式展示/">查询某年某月一个月的数据，以日历的形式展示</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <p>市场上有些这样的应用，会展示某年某月一个月的数据，比如女神们经常用的“大姨妈”APP，一些游戏的用户签到信息，等等</p>
-<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/dayima.png?raw=true" alt="img"></p>
-<p>那我们在写后台接口的时候，就需要返回这一个月的数据，今天我就分享一下笔者经常在工作中使用的方法。</p>
-<p>数据库DB中存了许多用户的应用数据，每条数据有一个日期字段，可以是Integer类型(yyyyMMdd)，可以是String类型(yyyy-MM-dd)，还可以是Date类型.</p>
-<p>首先定义了一个这样的类来保存某天的数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class CalendarDate&lt;T&gt;&#123;</span><br><span class="line">    public Integer day;</span><br><span class="line"></span><br><span class="line">    public Integer weekDay;</span><br><span class="line"></span><br><span class="line">    public Boolean isToday;</span><br><span class="line"></span><br><span class="line">    public T info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>四个字段的意思分别是：day-这个月的第几天，weekDay-星期几，isToday-是否是今天，info-该天的用户数据。</p>
-<p>请求接口如下，请求需要年和月两个参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/calendar&quot;)</span><br><span class="line">public List&lt;CalendarDate&lt;List&lt;String&gt;&gt;&gt; calendarDates(@RequestParam Integer year, @RequestParam Integer month) &#123;</span><br><span class="line">    Function&lt;String, Optional&lt;List&lt;String&gt;&gt;&gt; function = day -&gt; &#123;</span><br><span class="line">        List&lt;String&gt; datas = new ArrayList&lt;&gt;();</span><br><span class="line">        datas.add(day); // DB: datas = tableMapper.findByDay(day);</span><br><span class="line">        return Optional.of(datas);</span><br><span class="line">    &#125;;</span><br><span class="line">    return DateUtils.calendar(year, month, function);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重点就是下面封装好的工具类：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class DateUtils &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static &lt;T&gt; List&lt;CalendarDate&lt;T&gt;&gt; calendar(int year, int month, Function&lt;String, Optional&lt;T&gt;&gt; function) &#123;</span><br><span class="line">        List&lt;CalendarDate&lt;T&gt;&gt; cdList = new ArrayList&lt;&gt;();</span><br><span class="line">        int monthDays = monthDays(year, month);</span><br><span class="line">        CalendarDate&lt;T&gt; cdR;</span><br><span class="line">        for (int day = 1; day &lt;= monthDays; day++) &#123;</span><br><span class="line">            cdR = new CalendarDate&lt;&gt;();</span><br><span class="line">            cdR.day = day;</span><br><span class="line">            LocalDate date = LocalDate.of(year, month, day);</span><br><span class="line">            cdR.weekDay = dayOfWeek(date);</span><br><span class="line">            cdR.isToday = isToday(date);</span><br><span class="line">            if (function != null) &#123;</span><br><span class="line">                Optional&lt;T&gt; optional = function.apply(date.toString());</span><br><span class="line">                if (optional.isPresent()) &#123;</span><br><span class="line">                    cdR.info = optional.get();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            cdList.add(cdR);</span><br><span class="line">        &#125;</span><br><span class="line">        return cdList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static boolean isToday(LocalDate date) &#123;</span><br><span class="line">        LocalDate today = LocalDate.now();</span><br><span class="line">        return date.getYear() == today.getYear() &amp;&amp;</span><br><span class="line">                date.getMonth() == today.getMonth() &amp;&amp;</span><br><span class="line">                date.getDayOfMonth() == today.getDayOfMonth();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int dayOfWeek(LocalDate date) &#123;</span><br><span class="line">        return null == date ? 0 : date.getDayOfWeek().getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static int monthDays(int year, int month) &#123;</span><br><span class="line">        Calendar calendar = Calendar.getInstance();</span><br><span class="line">        calendar.set(Calendar.YEAR, year);</span><br><span class="line">        calendar.set(Calendar.MONTH, month - 1);</span><br><span class="line">        calendar.set(Calendar.DATE, 1);</span><br><span class="line">        calendar.roll(Calendar.DATE, -1);</span><br><span class="line">        return calendar.get(Calendar.DATE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>针对不同的业务要求，编写不一样的function函数，就可以返回日历形式的用户数据了。</p>
-<p>项目地址如下：<a href="https://github.com/cnblogs-projects/cnblogs-calendar" target="_blank" rel="noopener">https://github.com/cnblogs-projects/cnblogs-calendar</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-
-        <a data-url="https://nguyen-vm.github.io/2018/04/01/查询某年某月一个月的数据，以日历的形式展示/" data-id="cjtxrq8kv0000dsw6qvobgi5f" class="article-share-link">分享到</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-EntityManager常用方法简介" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2018/04/01/EntityManager常用方法简介/" class="article-date">
-  <time datetime="2018-03-31T16:00:00.000Z" itemprop="datePublished">2018-04-01</time>
-</h3>
-    
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/01/EntityManager常用方法简介/">EntityManager常用方法简介</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <p>首先简单介绍一下Entity生命周期中的Managed，Detached，Removed三种状态变化过程，如下图所示：</p>
-<p><img src="https://github.com/Nguyen-Vm/Nguyen-Vm.github.io/blob/master/img/entity-manager.jpg?raw=true" alt="img"></p>
-<p>1.entityManager.persist(Object entity);　　新增数据；</p>
-<p>如果entity的主键不为空，而数据库没有该主键，会抛出异常；</p>
-<p>如果entity的主键不为空，而数据库有该主键，且entity的其他字段与数据库不同，persist后不会更新数据库；</p>
-<p>2.entityManager.find(Class<t> entityClass, Object primaryKey);　　根据主键查找数据；</t></p>
-<p>如果主键格式不正确，会抛出illegalArgumentException异常;</p>
-<p>如果主键在数据库未找到数据返回null；</p>
-<p>3.entityManager.remove(Object entity);　　删除数据；</p>
-<p>只能将Managed状态的Entity实例删除，由此Entity实例状态变为Removed；</p>
-<p>4.entityManager.merge(T entity);　　</p>
-<p>将 Detached状态的Entity实例转至Managed状态；</p>
-<p>5.entityManager.clear();</p>
-<p>将所有的Entity实例状态转至Detached状态；</p>
-<p>6.entityManager.flush();</p>
-<p>将所有Managed状态的Entity实例同步到数据库；</p>
-<p>7.entityManager.refresh(Object entity);</p>
-<p>加载Entity实例后，数据库该条数据被修改，refresh该实例，能得到数据库最新的修改，覆盖原来的Entity实例；</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
-
-        <a data-url="https://nguyen-vm.github.io/2018/04/01/EntityManager常用方法简介/" data-id="cjtxs8zg90000gsw6b6ncirau" class="article-share-link">分享到</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-基于EntityManager的分页查询解决方案" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <h3 href="/2018/04/01/基于EntityManager的分页查询解决方案/" class="article-date">
-  <time datetime="2018-03-31T16:00:00.000Z" itemprop="datePublished">2018-04-01</time>
+    <h3 href="/2019/04/01/基于EntityManager的分页查询解决方案/" class="article-date">
+  <time datetime="2019-03-31T16:00:00.000Z" itemprop="datePublished">2019-04-01</time>
 </h3>
     
   </div>
@@ -650,7 +650,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/01/基于EntityManager的分页查询解决方案/">基于EntityManager的分页查询解决方案</a>
+      <a class="article-title" href="/2019/04/01/基于EntityManager的分页查询解决方案/">基于EntityManager的分页查询解决方案</a>
     </h1>
   
 
@@ -686,7 +686,7 @@
         
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EntityManager/">EntityManager</a></li></ul>
 
-        <a data-url="https://nguyen-vm.github.io/2018/04/01/基于EntityManager的分页查询解决方案/" data-id="cjtxs8zgv0005gsw6eojhcqjk" class="article-share-link">分享到</a>
+        <a data-url="https://nguyen-vm.github.io/2019/04/01/基于EntityManager的分页查询解决方案/" data-id="cjtxs8zgv0005gsw6eojhcqjk" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -719,15 +719,15 @@
           </li>
         
           <li>
+            <a href="/2019/04/01/查询某年某月一个月的数据，以日历的形式展示/">查询某年某月一个月的数据，以日历的形式展示</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/01/EntityManager常用方法简介/">EntityManager常用方法简介</a>
+          </li>
+        
+          <li>
             <a href="/2019/04/01/MySQL-数据合并/">MySQL-数据合并</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/01/微信公众号开发——用户账号体系/">微信公众号开发——用户账号体系</a>
-          </li>
-        
-          <li>
-            <a href="/2018/04/01/查询某年某月一个月的数据，以日历的形式展示/">查询某年某月一个月的数据，以日历的形式展示</a>
           </li>
         
       </ul>
@@ -748,7 +748,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a><span class="archive-list-count">7</span></li></ul>
     </div>
   </div>
 
